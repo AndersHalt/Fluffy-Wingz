@@ -1,74 +1,188 @@
 <!DOCTYPE html>
-<html lang='de'><head>
-<meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'>
-<link rel='manifest' href='manifest.json'><meta name='apple-mobile-web-app-capable' content='yes'><meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'>
-<link rel='apple-touch-icon' href='icon-192.png'><meta name='theme-color' content='#0a2040'>
-<title>Fluffy Wingz — Angel Chill</title>
-<style>*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{height:100%;margin:0}
-body{background:#071228;color:#fff;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;display:flex;align-items:center;justify-content:center;overflow:hidden}
-#wrap{position:relative;width:100%;max-width:860px;height:100vh;max-height:640px}canvas{width:100%;height:100%;display:block;background:#0a1a33}
-.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center}.hidden{display:none}
-#intro{background:radial-gradient(1200px 700px at 50% 120%, #0a2040 0%, #08162a 70%, #040a17 100%)}.brand{font-weight:900;font-size:1.8em;letter-spacing:.02em;color:#ffe6a6;text-shadow:0 0 8px rgba(255,230,166,.9),0 0 22px rgba(240,200,120,.55)}
-#menu{background:rgba(0,0,0,.82)}#menu img{max-width:82%;border-radius:12px;box-shadow:0 14px 42px rgba(0,0,0,.55)}.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
-button{background:linear-gradient(135deg,#ffd86b,#ffb44b);border:none;color:#212;font-weight:900;border-radius:40px;padding:12px 22px;cursor:pointer;box-shadow:0 10px 26px rgba(255,200,80,.35)}
-button.ghost{background:rgba(255,255,255,.08);color:#fff;border:2px solid rgba(255,255,255,.35)}
-#hudL,#hudR{position:absolute;top:8px;display:flex;gap:10px;align-items:center;padding:8px 12px;border-radius:14px;background:rgba(0,0,0,.28);backdrop-filter:blur(3px)}#hudL{left:10px}#hudR{right:10px}
-.eggIcon{width:18px;height:24px;border-radius:50% 50% 45% 45%;background:radial-gradient(ellipse at 50% 35%,#FFE57F 0%,#FFD700 35%,#CCAC00 100%);box-shadow:inset 0 -2px 6px rgba(0,0,0,.25),0 0 6px rgba(255,215,0,.7)}
-#over{background:rgba(6,10,22,.94)}</style></head><body>
-<div id='wrap'>
-  <div id='intro' class='screen'><div class='brand'>✨ Fantasy Fox präsentiert … Fluffy Wingz (Angel Chill) ✨</div></div>
-  <div id='menu' class='screen hidden'>
-    <img src='logo.png' alt='Fluffy Wingz'>
-    <div class='row' style='margin-top:16px'>
-      <button onclick="pick('easy')">EASY</button><button onclick="pick('normal')">NORMAL</button><button onclick="pick('hard')">HARD</button><button onclick="pick('insane')">INSANE</button><button class='ghost' onclick="pick('progress')">PROGRESSION</button>
+<html lang=\"de\">
+<head>
+<meta charset=\"UTF-8\">
+<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">
+<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">
+<meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black-translucent\">
+<link rel=\"manifest\" href=\"manifest.json\">
+<link rel=\"apple-touch-icon\" href=\"icon-192.png\">
+<meta name=\"theme-color\" content=\"#0a2b4f\">
+<title>Fluffy Wingz – Boss Mode</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:#0a2b4f;overflow:hidden;touch-action:none;display:flex;align-items:center;justify-content:center}
+#game{position:relative;width:100%;max-width:820px;height:100vh;max-height:620px}
+canvas{width:100%;height:100%;display:block;background:#0a2b4f;cursor:pointer}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center}
+.hidden{display:none}
+#intro{background:radial-gradient(1200px 600px at 50% 120%, #0a2b4f 0%, #071b30 65%, #03101f 100%); color:#ffd776}
+.glow{font-weight:900;font-size:2.0em;letter-spacing:.02em;text-shadow:0 0 6px rgba(255,215,120,.9),0 0 18px rgba(255,215,120,.6),0 0 36px rgba(255,180,40,.35)}
+.sub{opacity:.9;margin-top:10px;color:#ffdba0}
+#menu{background:rgba(0,0,0,.88)}
+#menu img.logo{max-width:86%;height:auto;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+button{background:linear-gradient(135deg,#FFB000,#FF7A00);color:#fff;border:none;padding:14px 26px;font-size:1.05em;font-weight:800;border-radius:50px;cursor:pointer;box-shadow:0 5px 22px rgba(255,160,0,.35)}
+button.ghost{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.5)}
+button:active{transform:scale(.97)}
+#hudL{position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:14px;background:rgba(0,0,0,.25);color:#fff;font-weight:800;font-size:1.05em;text-shadow:0 2px 4px rgba(0,0,0,.6)}
+#hudL .num{font-size:1.45em}
+#hudR{position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:14px;background:rgba(0,0,0,.25);color:#fff;font-weight:800;text-shadow:0 2px 4px rgba(0,0,0,.6)}
+.eggIcon{width:20px;height:26px;border-radius:50% 50% 45% 45%;background:radial-gradient(ellipse at 50% 35%,#FFE57F 0%,#FFD700 35%,#CCAC00 100%);box-shadow:inset 0 -2px 6px rgba(0,0,0,.25),0 0 6px rgba(255,215,0,.7)}
+#globalBar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.35);color:#fff;padding:6px 12px;border-radius:999px;font-weight:700;font-size:.95em}
+#over{background:rgba(255,255,255,.96);color:#222}
+#ad{position:absolute;inset:0;background:rgba(0,0,0,.85);color:#fff;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+#ad .card{background:#111;padding:22px 28px;border-radius:14px;box-shadow:0 12px 38px rgba(0,0,0,.5);text-align:center}
+</style>
+</head>
+<body>
+<div id=\"game\">
+  <div id=\"intro\" class=\"screen\">
+    <div class=\"glow\">✨ Fantasy Fox präsentiert … ✨</div>
+    <div class=\"sub\">Harfenzauber • Goldglanz • Boss‑Modus</div>
+  </div>
+
+  <div id=\"menu\" class=\"screen hidden\">
+    <img src=\"logo.png\" alt=\"Fluffy Wingz\" class=\"logo\"/>
+    <div class=\"row\" style=\"margin-top:18px\">
+      <button onclick=\"pickLevel('easy')\">EASY</button>
+      <button onclick=\"pickLevel('normal')\">NORMAL</button>
+      <button onclick=\"pickLevel('hard')\">HARD</button>
+      <button onclick=\"pickLevel('insane')\">INSANE</button>
     </div>
-    <div style='opacity:.9;margin-top:8px'>Tippen/Klicken/Leertaste = Flügelschlag · Sammle goldene Eier (+5)</div>
+    <div class=\"row\">
+      <button class=\"ghost\" onclick=\"pickLevel('progress')\">PROGRESSION</button>
+      <button class=\"ghost\" onclick=\"toggleBoss()\">BOSS‑MODUS: <span id=\"bossState\">AUS</span></button>
+    </div>
+    <div style=\"color:#fff;opacity:.85;margin-top:10px\">Tippe/klicke/Leertaste zum Fliegen · Goldene Eier (+5) · Upgrades & Landschaftswechsel</div>
   </div>
-  <div id='hudL' class='hidden'>Score <b id='score'>0</b></div>
-  <div id='hudR' class='hidden'><div class='eggIcon'></div><b id='eggs'>0</b></div>
-  <div id='over' class='screen hidden'>
-    <div style='font-size:2.1em;font-weight:900;margin-bottom:8px;'>GAME OVER</div>
-    <div id='final' style='margin-bottom:6px'>Score: 0</div>
-    <div id='eggSummary' style='margin-bottom:6px'>Eier: 0</div>
-    <div id='best' style='opacity:.9'>Bester Score: 0</div>
-    <div class='row' style='margin-top:12px'><button onclick='restart()'>NOCHMAL</button><button class='ghost' onclick='back()'>MENÜ</button></div>
+
+  <div id=\"hudL\" class=\"hidden\"><span>Score</span><span class=\"num\" id=\"score\">0</span> · <span>Best</span><span class=\"num\" id=\"bestLocal\">0</span></div>
+  <div id=\"hudR\" class=\"hidden\"><div class=\"eggIcon\"></div><span id=\"eggCount\">0</span></div>
+  <div id=\"globalBar\" class=\"hidden\">Globaler Highscore: <span id=\"globalHS\">—</span></div>
+
+  <div id=\"over\" class=\"screen hidden\">
+    <div style=\"font-size:2.2em;font-weight:900;margin-bottom:8px;\">GAME OVER</div>
+    <div style=\"font-size:1.2em;margin-bottom:6px\"><span id=\"finalScore\">Score: 0</span></div>
+    <div style=\"font-size:1.1em;margin-bottom:10px\"><span id=\"eggSummary\">Eier gesammelt: 0</span></div>
+    <div style=\"opacity:.85\" id=\"best\">Bester (Lokal): 0</div>
+    <div class=\"row\" style=\"margin-top:14px\">
+      <button onclick=\"restart()\">NOCHMAL</button>
+      <button class=\"ghost\" onclick=\"backToMenu()\">MENÜ</button>
+    </div>
   </div>
-  <canvas id='c'></canvas>
+
+  <div id=\"ad\"><div class=\"card\"><div id=\"adTitle\" style=\"font-size:1.2em;font-weight:900;margin-bottom:6px;\">Werbung</div><div id=\"adText\" style=\"opacity:.9;margin-bottom:10px\">Kurzer Clip…</div><button onclick=\"closeAd()\">Weiter</button></div></div>
+
+  <canvas id=\"canvas\"></canvas>
 </div>
+
+<audio id=\"musicA\" src=\"harp1.mp3\" preload=\"auto\" loop></audio>
+<audio id=\"musicB\" src=\"harp2.mp3\" preload=\"auto\" loop></audio>
+
 <script>
-if('serviceWorker' in navigator){ addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js')); }
-const LEVELS={easy:{speed:2.6,gap:175,pipeEvery:95,eggEvery:190,gravity:0.44,theme:'harpCloud'},normal:{speed:3.0,gap:155,pipeEvery:86,eggEvery:175,gravity:0.50,theme:'crystalSky'},hard:{speed:3.6,gap:138,pipeEvery:78,eggEvery:162,gravity:0.52,theme:'angelRise'},insane:{speed:4.3,gap:122,pipeEvery:70,eggEvery:148,gravity:0.55,theme:'heavenFlight'},progress:{speed:2.8,gap:165,pipeEvery:90,eggEvery:180,gravity:0.50,theme:'finalGlow'}};
-const cv=document.getElementById('c'),ctx=cv.getContext('2d'); cv.width=440; cv.height=640;
-let CFG=LEVELS.normal; let game={state:'intro',score:0,eggs:0,best:parseInt(localStorage.getItem('fw_best')||'0'),frame:0,level:'normal',step:0};
-const bird={x:110,y:300,vy:0,size:28,rot:0}; let pipes=[],eggs=[],sparkles=[],floaters=[],far=[],mid=[],near=[];
-const scoreEl=document.getElementById('score'), eggsEl=document.getElementById('eggs');
-const AC=(window.AudioContext||window.webkitAudioContext)?new (window.AudioContext||window.webkitAudioContext)():null; let music={timer:null,delayChain:null};
-function makeDelayChain(){ if(!AC) return null; const delay=AC.createDelay(0.8); delay.delayTime.value=0.35; const fb=AC.createGain(); fb.gain.value=0.35; const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=2200; delay.connect(fb).connect(lp).connect(delay); const g=AC.createGain(); g.gain.value=.08; return {input:g,out:delay}; }
-function chord(freq,seconds=2.1,detune=5){ const osc1=AC.createOscillator(),osc2=AC.createOscillator(),pad=AC.createOscillator(); osc1.type='sine';osc2.type='triangle';pad.type='sine'; osc1.frequency.value=freq; osc2.frequency.value=freq*(2**(7/12)); pad.frequency.value=freq/2; osc2.detune.value=detune; pad.detune.value=-detune; const g=AC.createGain(); g.gain.setValueAtTime(0,AC.currentTime); g.gain.linearRampToValueAtTime(.06,AC.currentTime+.25); g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+seconds); osc1.connect(g);osc2.connect(g);pad.connect(g); const d=music.delayChain||(music.delayChain=makeDelayChain()); g.connect(d.input); d.out.connect(AC.destination); osc1.start();osc2.start();pad.start(); osc1.stop(AC.currentTime+seconds);osc2.stop(AC.currentTime+seconds);pad.stop(AC.currentTime+seconds); }
-function playTheme(theme){ if(!AC) return; stopMusic(); music.delayChain=makeDelayChain(); const base=392; let idx=0; const scales=({harpCloud:[0,2,4,7,9],crystalSky:[0,2,3,7,9],angelRise:[0,4,5,7,11],heavenFlight:[0,2,6,7,9],finalGlow:[0,2,5,7,9]})[theme]||[0,2,4,7,9]; music.timer=setInterval(()=>{ const sem=scales[idx%scales.length]; const f=base*Math.pow(2,sem/12); chord(f,2.3,6); if(idx%4===0){ const bell=AC.createOscillator(), g=AC.createGain(); bell.type='sine'; bell.frequency.value=f*2; g.gain.setValueAtTime(.04,AC.currentTime); g.gain.exponentialRampToValueAtTime(.0008,AC.currentTime+0.5); bell.connect(g).connect(AC.destination); bell.start(); bell.stop(AC.currentTime+0.55);} idx++; },1200); }
-function stopMusic(){ if(music.timer){clearInterval(music.timer); music.timer=null;} }
-function sfxWing(){ if(!AC) return; const o=AC.createOscillator(), g=AC.createGain(); o.type='sine'; o.frequency.value=680; g.gain.value=.03; o.connect(g).connect(AC.destination); o.start(); o.stop(AC.currentTime+0.06); }
-function sfxEgg(){ if(!AC) return; const o=AC.createOscillator(), g=AC.createGain(); o.type='sine'; o.frequency.value=1100; g.gain.value=.035; o.connect(g).connect(AC.destination); o.start(); o.stop(AC.currentTime+0.09); }
-for(let i=0;i<24;i++) far.push({x:Math.random()*cv.width,y:Math.random()*200+40,s:.5+Math.random()*0.6});
-for(let i=0;i<14;i++) mid.push({x:Math.random()*cv.width,y:Math.random()*260+160,s:.8+Math.random()*0.7});
-for(let i=0;i<9;i++) near.push({x:Math.random()*cv.width,y:Math.random()*120+420,s:1.2+Math.random()*0.8});
-const intro=document.getElementById('intro'),menu=document.getElementById('menu'),over=document.getElementById('over');
-setTimeout(()=>{intro.classList.add('hidden');menu.classList.remove('hidden');game.state='menu';},1200);
-function pick(id){CFG={...LEVELS[id]};game.level=id;start();}
-function start(){menu.classList.add('hidden');document.getElementById('hudL').classList.remove('hidden');document.getElementById('hudR').classList.remove('hidden');reset();game.state='play'; if(AC && AC.state==='suspended') AC.resume(); playTheme(CFG.theme);loop();}
-function back(){document.getElementById('hudL').classList.add('hidden');document.getElementById('hudR').classList.add('hidden');over.classList.add('hidden');stopMusic();menu.classList.remove('hidden');game.state='menu';}
-function restart(){over.classList.add('hidden');reset();game.state='play';playTheme(CFG.theme);loop();}
-function reset(){game.score=0;game.eggs=0;game.frame=0;bird.y=300;bird.vy=0;bird.rot=0;pipes.length=0;eggs.length=0;sparkles.length=0;floaters.length=0;scoreEl.textContent=0;eggsEl.textContent=0;}
-function flap(){if(game.state==='play'){bird.vy=-8.1;bird.rot=-0.35;sfxWing();}}
-cv.addEventListener('click',flap);cv.addEventListener('touchstart',e=>{e.preventDefault();flap();});document.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();flap();}});
-function spawnPipe(){const gap=CFG.gap,minY=100,maxY=cv.height-gap-110;const y=Math.random()*(maxY-minY)+minY;pipes.push({x:cv.width,y,gap,w:64,scored:false});}
-function spawnEgg(){const r=15,minY=60,maxY=cv.height-60-r*2;const y=Math.random()*(maxY-minY)+minY;eggs.push({x:cv.width,y,r,t:0,got:false});for(let i=0;i<12;i++){sparkles.push({x:cv.width,y,t:0,a:1,ang:Math.random()*Math.PI*2,v:Math.random()*0.9+0.4});}}
-function update(){game.frame++;if(game.level==='progress'&&game.score>0&&game.score%25===0&&game.step!==game.score){game.step=game.score;CFG.speed=Math.min(CFG.speed+0.16,5.2);CFG.gap=Math.max(CFG.gap-6,110);}for(const p of far){p.x-=CFG.speed*0.18*p.s;if(p.x<-120)p.x=cv.width+100;}for(const p of mid){p.x-=CFG.speed*0.32*p.s;if(p.x<-140)p.x=cv.width+120;}for(const p of near){p.x-=CFG.speed*0.55*p.s;if(p.x<-160)p.x=cv.width+140;}bird.vy+=CFG.gravity;bird.y+=bird.vy;bird.rot=bird.rot*0.9+Math.min(Math.max(bird.vy*0.02,-0.4),0.6)*0.35;if(bird.y>cv.height-52||bird.y<0){gameOver();return;}if(game.frame%CFG.pipeEvery===0)spawnPipe();if(game.frame%CFG.eggEvery===0)spawnEgg();for(const p of pipes){p.x-=CFG.speed;if(!p.scored&&p.x+p.w<bird.x){p.scored=true;game.score++;scoreEl.textContent=game.score;}const bx=bird.x,by=bird.y,s=bird.size;if(bx+s>p.x&&bx<p.x+p.w){if(by<p.y||by+s>p.y+p.gap){gameOver();return;}}}pipes=pipes.filter(p=>p.x>-100);for(const e of eggs){e.x-=CFG.speed;e.t+=0.1;const dx=(bird.x+bird.size*0.6)-e.x,dy=(bird.y+bird.size*0.6)-e.y;if(!e.got&&Math.hypot(dx,dy)<bird.size*0.55+e.r){e.got=true;game.eggs++;game.score+=5;scoreEl.textContent=game.score;eggsEl.textContent=game.eggs;floaters.push({x:e.x,y:e.y-12,text:'+5',a:1,vy:-0.6});sfxEgg();}}eggs=eggs.filter(e=>e.x+e.r>0&&!e.got);for(const s of sparkles){s.x+=Math.cos(s.ang)*s.v-CFG.speed;s.y+=Math.sin(s.ang)*s.v*0.4;s.a-=0.01;}sparkles=sparkles.filter(s=>s.a>0);for(const f of floaters){f.y+=f.vy;f.a-=0.02;}floaters=floaters.filter(f=>f.a>0);}
-function gameOver(){game.state='over';stopMusic();if(game.score>game.best){game.best=game.score;localStorage.setItem('fw_best',String(game.best));}document.getElementById('final').textContent='Score: '+game.score;document.getElementById('eggSummary').textContent='Eier: '+game.eggs;document.getElementById('best').textContent='Bester Score: '+game.best;document.getElementById('hudL').classList.add('hidden');document.getElementById('hudR').classList.add('hidden');over.classList.remove('hidden');}
-const birdImg=new Image();birdImg.src='./bird_sprite.png';
-function mountain(x,y,s,t){ctx.save();ctx.translate(x,y);ctx.scale(s,s);const g=ctx.createLinearGradient(0,0,0,120);g.addColorStop(0,t);g.addColorStop(1,'#0b1f35');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(-60,120);ctx.lineTo(0,0);ctx.lineTo(60,120);ctx.closePath();ctx.fill();ctx.restore();}
-function cloud(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='rgba(255,255,255,.93)';ctx.beginPath();ctx.arc(0,0,22,0,Math.PI*2);ctx.arc(20,-8,18,0,Math.PI*2);ctx.arc(38,0,26,0,Math.PI*2);ctx.arc(20,10,20,0,Math.PI*2);ctx.fill();ctx.restore();}
-function pipe3D(x,y,w,gap){ctx.fillStyle='#7ee3b8';ctx.fillRect(x,0,w,y);ctx.fillRect(x,y+gap,w,cv.height-(y+gap));const grad=ctx.createLinearGradient(x,0,x+w,0);grad.addColorStop(0,'rgba(255,255,255,.25)');grad.addColorStop(0.5,'rgba(255,255,255,0)');grad.addColorStop(1,'rgba(0,0,0,.25)');ctx.fillStyle=grad;ctx.fillRect(x,0,w,y);ctx.fillRect(x,y+gap,w,cv.height-(y+gap));ctx.fillStyle='#2fb98d';ctx.fillRect(x-2,y-10,w+4,10);ctx.fillRect(x-2,y+gap,w+4,10);}
-function draw(){let sky=ctx.createLinearGradient(0,0,0,cv.height);sky.addColorStop(0,'#0b1730');sky.addColorStop(0.7,'#123267');sky.addColorStop(1,'#2b69a5');ctx.fillStyle=sky;ctx.fillRect(0,0,cv.width,cv.height);for(const p of far)mountain(p.x,p.y,p.s,'#143e6a');for(const p of mid)cloud(p.x,p.y,p.s*1.1);for(const p of near)mountain(p.x,p.y,p.s*0.9,'#0f2d4c');let g=ctx.createLinearGradient(0,cv.height-70,0,cv.height);g.addColorStop(0,'#1c7a46');g.addColorStop(1,'#0e4b28');ctx.fillStyle=g;ctx.fillRect(0,cv.height-60,cv.width,60);for(const p of pipes)pipe3D(p.x,p.y,p.w,p.gap);for(const e of eggs){ctx.save();ctx.shadowColor='rgba(255,215,0,.6)';ctx.shadowBlur=16;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.ellipse(e.x,e.y,e.r,e.r*1.3,0,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#FFE57F';ctx.beginPath();ctx.ellipse(e.x-e.r*0.1,e.y-e.r*0.35,e.r*0.7,e.r*0.32,0,0,Math.PI*2);ctx.fill();ctx.restore();}for(const s of sparkles){ctx.globalAlpha=s.a;ctx.fillStyle='#FFF8B0';ctx.beginPath();ctx.arc(s.x,s.y,1.6,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}if(birdImg.complete){const h=birdImg.height,w=birdImg.width,scale=(bird.size*2)/h,dw=w*scale,dh=h*scale;const cx=bird.x+bird.size/2,cy=bird.y+bird.size/2;ctx.save();ctx.translate(cx,cy);ctx.rotate(bird.rot);ctx.drawImage(birdImg,-dw/2,-dh/2,dw,dh);ctx.restore();}for(const f of floaters){ctx.globalAlpha=f.a;ctx.font='bold 20px system-ui,Arial';ctx.fillStyle='#ffcf66';ctx.fillText(f.text,f.x-10,f.y);ctx.globalAlpha=1;}}
-function loop(){if(game.state!=='play')return;update();draw();requestAnimationFrame(loop);}
-</script></body></html>
+if ('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js')); }
+const MUSIC_SWITCH_MS=300000; const MUSIC_TRACKS=['harp1.mp3','harp2.mp3','harp3.mp3'];
+const LEADERBOARD_ENDPOINT=null; let BOSS_MODE=false;
+
+const LEVELS={easy:{speed:2.6,gap:170,pipeEvery:100,eggEvery:190,gravity:0.45},normal:{speed:3.0,gap:150,pipeEvery:90,eggEvery:180,gravity:0.50},hard:{speed:3.6,gap:135,pipeEvery:80,eggEvery:165,gravity:0.52},insane:{speed:4.2,gap:120,pipeEvery:70,eggEvery:150,gravity:0.54},progress:{speed:2.8,gap:160,pipeEvery:90,eggEvery:180,gravity:0.50}};
+
+const canvas=document.getElementById('canvas'), ctx=canvas.getContext('2d'); canvas.width=420; canvas.height=620;
+const hudScore=document.getElementById('score'), hudEggs=document.getElementById('eggCount'), bestLocalEl=document.getElementById('bestLocal');
+const AC=(window.AudioContext||window.webkitAudioContext)?new (window.AudioContext||window.webkitAudioContext)():null;
+function tone(f=800,d=0.07,t='sine',v=0.045){ if(!AC)return; const ct=AC.currentTime,o=AC.createOscillator(),g=AC.createGain(); o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g).connect(AC.destination);o.start(ct);o.stop(ct+d); }
+const introEl=document.getElementById('intro'), menuEl=document.getElementById('menu'), overEl=document.getElementById('over');
+const globalBar=document.getElementById('globalBar'), globalHSEl=document.getElementById('globalHS');
+let birdImg=new Image(); birdImg.src='./bird_sprite.png';
+let cloudsBack=[],cloudsFront=[];
+let CFG=LEVELS.normal; let theme=0, lastThemeScore=0;
+let game={state:'menu',score:0,eggs:0,best:parseInt(localStorage.getItem('fw_best')||'0'),frame:0,speed:3,level:'normal',levelStep:0, upgrades:[], upgradeLevel:0};
+const bird={x:100,y:300,vy:0,size:30,rot:0, thin:false, colorShift:0, wings:false};
+let pipes=[],eggs=[],sparkles=[],floaters=[];
+
+const mA=document.getElementById('musicA'), mB=document.getElementById('musicB'); let musicIndex=0, activeA=true;
+function startMusic(){ crossplay(); setInterval(nextTrack,MUSIC_SWITCH_MS); }
+function crossplay(){ const track=MUSIC_TRACKS[musicIndex % MUSIC_TRACKS.length]; if(activeA){ mA.src=track; safePlay(mA); fade(mB,0); fade(mA,1);} else { mB.src=track; safePlay(mB); fade(mA,0); fade(mB,1);} activeA=!activeA; }
+function nextTrack(){ musicIndex++; crossplay(); }
+function fade(aud,target){ if(!aud) return; aud.volume=aud.volume||0; const step=target>aud.volume?0.02:-0.02; const id=setInterval(()=>{ aud.volume=Math.min(1,Math.max(0,aud.volume+step)); if((step>0&&aud.volume>=target)||(step<0&&aud.volume<=target)) clearInterval(id); },60); }
+function safePlay(a){ a.currentTime=0; a.play().catch(()=>{}); }
+
+let lastAd=0; function maybeAdTimed(){ const now=performance.now(); if(now-lastAd>5*60*1000){ showAd('Kurze Pause','Clip (Platzhalter) – weiter in 3s'); } }
+function showAd(title,text){ lastAd=performance.now(); const box=document.getElementById('ad'); document.getElementById('adTitle').textContent=title; document.getElementById('adText').textContent=text; box.style.display='flex'; setTimeout(()=>{ closeAd(); },3000); }
+function closeAd(){ document.getElementById('ad').style.display='none'; }
+function rewardedPrompt(reason,onFinish){ showAd('Bonus verfügbar', reason+' – kurzer Clip…'); setTimeout(()=>{ closeAd(); onFinish&&onFinish(); },2000); }
+
+async function fetchGlobal(){ if(!LEADERBOARD_ENDPOINT){ globalBar.classList.remove('hidden'); globalHSEl.textContent='Demo'; return; } try{ const r=await fetch(LEADERBOARD_ENDPOINT); const j=await r.json(); globalBar.classList.remove('hidden'); globalHSEl.textContent=(j.top||0);}catch(e){ globalBar.classList.remove('hidden'); globalHSEl.textContent='—'; } }
+async function postScore(score){ if(!LEADERBOARD_ENDPOINT) return; try{ await fetch(LEADERBOARD_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({score})}); }catch(e){} }
+
+function runIntro(){ setTimeout(()=>{ introEl.classList.add('hidden'); menuEl.classList.remove('hidden'); },1200); startMusic(); fetchGlobal(); } runIntro();
+
+function backToMenu(){ overEl.classList.add('hidden'); menuEl.classList.remove('hidden'); document.getElementById('hudL').classList.add('hidden'); document.getElementById('hudR').classList.add('hidden'); document.getElementById('globalBar').classList.remove('hidden'); game.state='menu'; }
+function pickLevel(id){ CFG={...LEVELS[id]}; game.level=id; start(); }
+function toggleBoss(){ BOSS_MODE=!BOSS_MODE; document.getElementById('bossState').textContent=BOSS_MODE?'AN':'AUS'; }
+function start(){ menuEl.classList.add('hidden'); document.getElementById('hudL').classList.remove('hidden'); document.getElementById('hudR').classList.remove('hidden'); document.getElementById('globalBar').classList.remove('hidden'); resetCore(); game.state='play'; loop(); }
+function restart(){ overEl.classList.add('hidden'); document.getElementById('hudL').classList.remove('hidden'); document.getElementById('hudR').classList.remove('hidden'); document.getElementById('globalBar').classList.remove('hidden'); resetCore(); game.state='play'; loop(); }
+
+function resetCore(){ game.score=0; game.eggs=0; game.frame=0; game.speed=CFG.speed; game.upgrades=[]; game.upgradeLevel=0; Object.assign(bird,{y:300,vy:0,rot:0,thin:false,colorShift:0,wings:false}); pipes.length=eggs.length=sparkles.length=floaters.length=0; hudScore.textContent=0; hudEggs.textContent=0; bestLocalEl.textContent=game.best; theme=0; lastThemeScore=0; }
+
+function flap(){ if(game.state==='play'){ bird.vy=-8; bird.rot=-0.35; tone(900,.05,'triangle',.05);} }
+canvas.addEventListener('click', flap); canvas.addEventListener('touchstart', e=>{e.preventDefault(); flap();}); document.addEventListener('keydown',e=>{ if(e.code==='Space'){ e.preventDefault(); flap(); }});
+
+function spawnPipe(){ const gap=CFG.gap, minY=100, maxY=canvas.height-gap-100; let y=Math.random()*(maxY-minY)+minY; if(BOSS_MODE) y+=Math.sin(game.frame*0.03)*20; pipes.push({x:canvas.width,y,gap,scored:false,w:60}); }
+function spawnEgg(){ const r=15, marginTop=80, marginBottom=80; const minY=marginTop, maxY=canvas.height-50-marginBottom-r*2; let y=Math.random()*(maxY-minY)+minY; if(pipes.length){ const p=pipes[pipes.length-1]; const center=p.y+p.gap/2; if(Math.random()<0.6) y=center+(Math.random()*40-20); } y=Math.max(r+40, Math.min(canvas.height-50-r-40, y)); eggs.push({x:canvas.width,y,r,collected:false,t:0}); for(let i=0;i<10;i++){ sparkles.push({x:canvas.width,y:y,a:1,s:Math.random()*1.4+0.6,ang:Math.random()*Math.PI*2,v:Math.random()*0.8+0.3}); } }
+
+function grantUpgrade(kind){ if(kind==='wings'){ bird.wings=true; } if(kind==='color'){ bird.colorShift=(bird.colorShift+1)%6; } if(kind==='thin'){ bird.thin=true; } game.upgrades.push(kind); game.upgradeLevel=game.upgrades.length; }
+function loseOneUpgrade(){ const lost=game.upgrades.pop(); if(!lost) return false; if(lost==='wings') bird.wings=false; if(lost==='color') bird.colorShift=(bird.colorShift+5)%6; if(lost==='thin') bird.thin=false; game.upgradeLevel=game.upgrades.length; floaters.push({x:bird.x+10,y:bird.y-20,text:'−UP',a:1,vy:-0.6}); tone(260,.08,'sawtooth',.06); return true; }
+function applyMilestones(){ if(game.score>=20 && !game.upgrades.includes('wings')) grantUpgrade('wings'); if(game.score>=40 && !game.upgrades.includes('color')) grantUpgrade('color'); if(game.score>=60 && !game.upgrades.includes('thin')) grantUpgrade('thin'); if(game.score - lastThemeScore >= 30){ lastThemeScore=game.score; theme=(theme+1)%4; } if(game.level==='progress' && game.score>0 && game.score%25===0 && game.levelStep!==game.score){ game.levelStep=game.score; CFG.speed=Math.min(CFG.speed+0.15,5.2); CFG.gap=Math.max(CFG.gap-6,110); tone(700,.08,'square',.05);} }
+
+function update(){
+  game.frame++; maybeAdTimed(); applyMilestones();
+  for(const c of cloudsBack){ c.x -= game.speed*0.20*c.s; if(c.x<-120) c.x=canvas.width+80; }
+  for(const c of cloudsFront){ c.x -= game.speed*0.35*c.s; if(c.x<-140) c.x=canvas.width+100; }
+  const g = bird.thin ? CFG.gravity*0.96 : CFG.gravity; bird.vy += g; bird.y += bird.vy; bird.rot = bird.rot*0.92 + Math.min(Math.max(bird.vy*0.02, -0.4), 0.6)*0.35;
+  if(bird.y>canvas.height-50||bird.y<0){ if(!loseOneUpgrade()){ return gameOver(); } else { bird.y=Math.min(Math.max(10,bird.y), canvas.height-60); bird.vy=-4; } }
+  if(game.frame % CFG.pipeEvery === 0) spawnPipe(); if(game.frame % CFG.eggEvery === 0) spawnEgg();
+  for(const p of pipes){
+    p.x -= game.speed*(BOSS_MODE?1.05:1);
+    if(!p.scored && p.x+p.w < bird.x){ p.scored=true; game.score++; hudScore.textContent=game.score; tone(600,.04,'sine',.04); }
+    if(bird.x+bird.size>p.x && bird.x<p.x+p.w){
+      const cx=bird.x + bird.size*0.55, cy=bird.y + bird.size*0.55, rx=(bird.size*(bird.thin?0.45:0.55)), ry=bird.size*0.45;
+      const inTop = cy-ry < p.y, inBottom = cy+ry > p.y+p.gap;
+      if(inTop||inBottom){ if(!loseOneUpgrade()){ return gameOver(); } else { bird.vy=-6; bird.y=Math.max(10, Math.min(canvas.height-60, cy)); } }
+    }
+  }
+  pipes = pipes.filter(p=>p.x>-80);
+  for(const e of eggs){
+    e.x -= game.speed; e.t += 0.1;
+    const dx=(bird.x+bird.size*0.6)-e.x, dy=(bird.y+bird.size*0.6)-e.y;
+    if(!e.collected && Math.hypot(dx,dy) < (bird.size*(bird.thin?0.45:0.55)) + e.r){
+      e.collected=true; game.eggs+=1; game.score+=5; hudEggs.textContent=game.eggs; hudScore.textContent=game.score; floaters.push({x:e.x,y:e.y-12,text:'+5',a:1,vy:-0.6}); tone(1100,.08,'square',.05);
+      if (Math.random()<0.15){ rewardedPrompt('Bonus‑Flügel', ()=>{ grantUpgrade('wings'); }); }
+    }
+  }
+  eggs=eggs.filter(e=>e.x+e.r>0 && !e.collected);
+  for(const s of sparkles){ s.x += Math.cos(s.ang)*s.v - game.speed; s.y += Math.sin(s.ang)*s.v*0.4; s.a -= 0.01; } sparkles=sparkles.filter(s=>s.a>0);
+  for(const f of floaters){ f.y+=f.vy; f.a-=0.02; } floaters=floaters.filter(f=>f.a>0);
+}
+function gameOver(){ game.state='over'; if(game.score>game.best){ game.best=game.score; localStorage.setItem('fw_best',game.best);} document.getElementById('finalScore').textContent='Score: '+game.score; document.getElementById('eggSummary').textContent='Eier gesammelt: '+game.eggs; document.getElementById('best').textContent='Bester (Lokal): '+game.best; overEl.classList.remove('hidden'); document.getElementById('hudL').classList.add('hidden'); document.getElementById('hudR').classList.add('hidden'); document.getElementById('globalBar').classList.add('hidden'); postScore(game.score); }
+
+function cloud(x,y,s){ ctx.save(); ctx.translate(x,y); ctx.scale(s,s); ctx.fillStyle='rgba(255,255,255,.95)'; ctx.beginPath(); ctx.arc(0,0,22,0,Math.PI*2); ctx.arc(20,-8,18,0,Math.PI*2); ctx.arc(38,0,26,0,Math.PI*2); ctx.arc(20,10,20,0,Math.PI*2); ctx.fill(); ctx.restore(); }
+function drawSky(){ const grad=ctx.createLinearGradient(0,0,0,canvas.height); if(theme===0){ grad.addColorStop(0,'#0a2b4f'); grad.addColorStop(0.5,'#1b4f7d'); grad.addColorStop(1,'#97d9ff'); } if(theme===1){ grad.addColorStop(0,'#5c1f5f'); grad.addColorStop(0.5,'#d16d5a'); grad.addColorStop(1,'#ffd29b'); } if(theme===2){ grad.addColorStop(0,'#04060b'); grad.addColorStop(0.5,'#0b1740'); grad.addColorStop(1,'#2d3f6b'); } if(theme===3){ grad.addColorStop(0,'#152f59'); grad.addColorStop(0.5,'#3a78b1'); grad.addColorStop(1,'#c6e7ff'); } ctx.fillStyle=grad; ctx.fillRect(0,0,canvas.width,canvas.height); }
+function draw(){
+  drawSky();
+  for(const c of cloudsBack) cloud(c.x,c.y,c.s*0.9);
+  for(const c of cloudsFront) cloud(c.x,c.y,c.s*1.1);
+  ctx.fillStyle= theme===2 ? '#0c3b12' : '#228B22'; ctx.fillRect(0,canvas.height-50,canvas.width,50);
+  for(const p of pipes){ ctx.fillStyle = (bird.colorShift%2===0 ? '#2ECC71' : '#27AE60'); ctx.fillRect(p.x,0,p.w,p.y); ctx.fillRect(p.x,p.y+p.gap,p.w,canvas.height-p.y-p.gap); ctx.strokeStyle='#1e8c56'; ctx.lineWidth=3; ctx.strokeRect(p.x,0,p.w,p.y); ctx.strokeRect(p.x,p.y+p.gap,p.w,canvas.height-p.y-p.gap); }
+  for(const e of eggs){ ctx.save(); ctx.shadowColor='rgba(255,215,0,0.6)'; ctx.shadowBlur=18; ctx.fillStyle='#FFD700'; ctx.beginPath(); ctx.ellipse(e.x,e.y,e.r,e.r*1.3,0,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0; ctx.fillStyle='#FFE57F'; ctx.beginPath(); ctx.ellipse(e.x-e.r*0.1, e.y-e.r*0.35, e.r*0.7 + Math.sin(e.t)*0.4, e.r*0.32, 0, 0, Math.PI*2); ctx.fill(); ctx.restore(); }
+  for(const s of sparkles){ ctx.globalAlpha=s.a; ctx.fillStyle='#FFF8B0'; ctx.beginPath(); ctx.arc(s.x,s.y,s.s,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1; }
+  if(birdImg.complete){ const h=birdImg.height,w=birdImg.width, scale=((bird.size*2)/(h)); const dw=w*scale, dh=h*scale; const cx=bird.x + (bird.thin?bird.size*0.35:bird.size*0.5), cy=bird.y + bird.size*0.5; ctx.save(); ctx.translate(cx,cy); ctx.rotate(bird.rot); ctx.drawImage(birdImg,-dw/2,-dh/2,dw,dh); if(bird.colorShift){ ctx.globalCompositeOperation='hue'; ctx.fillStyle=['#fff','#ffd700','#ff7a00','#00ffd0','#00c3ff','#ff00e1'][bird.colorShift%6]; ctx.fillRect(-dw/2,-dh/2,dw,dh); ctx.globalCompositeOperation='source-over'; } if(bird.wings){ ctx.globalAlpha=0.25; ctx.beginPath(); ctx.ellipse(0,0,dw*0.6,dh*0.9,0,0,Math.PI*2); ctx.fillStyle='#ffd776'; ctx.fill(); ctx.globalAlpha=1; } ctx.restore(); }
+  for(const f of floaters){ ctx.globalAlpha=f.a; ctx.font='bold 20px Arial'; ctx.fillStyle='#FF7A00'; ctx.fillText(f.text, f.x-10, f.y); ctx.globalAlpha=1; }
+}
+function loop(){ if(game.state!=='play') return; update(); draw(); requestAnimationFrame(loop); }
+for(let i=0;i<6;i++) cloudsBack.push({x:Math.random()*canvas.width, y:60+Math.random()*200, s:.6+Math.random()*0.5});
+for(let i=0;i<5;i++) cloudsFront.push({x:Math.random()*canvas.width, y:220+Math.random()*260, s:.9+Math.random()*0.7});
+</script>
+</body>
+</html>
