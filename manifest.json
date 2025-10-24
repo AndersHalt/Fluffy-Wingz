@@ -3,8 +3,8 @@
   "short_name": "Fluffy Wingz",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#0a2b4f",
-  "theme_color": "#0a2b4f",
+  "background_color": "#0a2040",
+  "theme_color": "#0a2040",
   "icons": [
     {
       "src": "icon-192.png",
