@@ -1,77 +1,153 @@
-<!DOCTYPE html><html lang=de><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name=apple-mobile-web-app-capable content=yes><meta name=apple-mobile-web-app-status-bar-style content=black-translucent><link rel=manifest href=manifest.json><link rel=apple-touch-icon href=icon-192.png><meta name=theme-color content=#0a2b4f><title>Fluffy Wingz – Monetize Deluxe</title>
-<style>*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{height:100%}body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:#0a2b4f;overflow:hidden;touch-action:none;display:flex;align-items:center;justify-content:center}#game{position:relative;width:100%;max-width:820px;height:100vh;max-height:620px}canvas{width:100%;height:100%;display:block;background:#0a2b4f;cursor:pointer}.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center}.hidden{display:none}#intro{background:radial-gradient(1200px 600px at 50% 120%,#0a2b4f 0%,#071b30 65%,#03101f 100%);color:#ffd776}.glow{font-weight:900;font-size:2em;text-shadow:0 0 6px #ffd778,0 0 18px #f6c36b,0 0 36px #f3ad4a}.sub{opacity:.9;margin-top:10px;color:#ffdba0}#menu{background:rgba(0,0,0,.88)}#menu img.logo{max-width:86%;height:auto;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.6)}.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:16px}button{background:linear-gradient(135deg,#FFB000,#FF7A00);color:#fff;border:none;padding:14px 26px;font-size:1.05em;font-weight:800;border-radius:50px;cursor:pointer;box-shadow:0 5px 22px rgba(255,160,0,.35)}button.ghost{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.5)}button:active{transform:scale(.97)}#hudL{position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:14px;background:rgba(0,0,0,.25);color:#fff;font-weight:800;font-size:1.05em;text-shadow:0 2px 4px rgba(0,0,0,.6)}#hudL .num{font-size:1.45em}#hudR{position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:14px;background:rgba(0,0,0,.25);color:#fff;font-weight:800;text-shadow:0 2px 4px rgba(0,0,0,.6)}.eggIcon{width:20px;height:26px;border-radius:50% 50% 45% 45%;background:radial-gradient(ellipse at 50% 35%,#FFE57F 0%,#FFD700 35%,#CCAC00 100%);box-shadow:inset 0 -2px 6px rgba(0,0,0,.25),0 0 6px rgba(255,215,0,.7)}#globalBar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.35);color:#fff;padding:6px 12px;border-radius:999px;font-weight:700;font-size:.95em}#over{background:rgba(255,255,255,.96);color:#222}#panel{position:absolute;top:56px;left:50%;transform:translateX(-50%);display:none;background:rgba(0,0,0,.85);color:#fff;padding:16px 18px;border-radius:16px;gap:8px;min-width:280px;box-shadow:0 10px 30px rgba(0,0,0,.5)}#panel h3{margin-bottom:6px}.inputrow{display:flex;align-items:center;gap:10px;margin:4px 0}.range{width:180px}.badge{padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.15);font-size:.85em}#shop{position:absolute;bottom:56px;left:50%;transform:translateX(-50%);display:none;background:rgba(0,0,0,.9);color:#fff;padding:16px;border-radius:16px;min-width:300px}.shopitem{display:flex;justify-content:space-between;align-items:center;margin:6px 0;padding:8px;border-radius:10px;background:rgba(255,255,255,.06)}#gift{position:absolute;bottom:8px;right:8px;background:linear-gradient(135deg,#FFD700,#FF9A00);color:#000;font-weight:900;padding:10px 14px;border-radius:12px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.35)}</style></head>
-<body><div id=game>
-<div id=intro class=screen><div class=glow>✨ Fantasy Fox präsentiert … ✨</div><div class=sub>Harfenzauber • Goldglanz • Monetize Deluxe</div></div>
-<div id=menu class="screen hidden">
-  <img src=logo.png alt="Fluffy Wingz" class=logo>
-  <div class=row><button onclick="pickLevel('easy')">EASY</button><button onclick="pickLevel('normal')">NORMAL</button><button onclick="pickLevel('hard')">HARD</button><button onclick="pickLevel('insane')">INSANE</button></div>
-  <div class=row><button class=ghost onclick="pickLevel('progress')">PROGRESSION</button><button class=ghost onclick="toggleBoss()">BOSS‑MODUS: <span id=bossState>AUS</span></button><button class=ghost onclick=togglePanel()>🔊 Lautstärke</button><button class=ghost onclick=toggleShop()>🛒 Shop</button></div>
-  <div class=row><span class=badge>Globaler Highscore: <span id=globalHS>—</span></span><span class=badge>Gratis‑Geschenk in <span id=giftTimer>--:--</span></span><span class=badge id=adsStatus>Werbung: AN</span></div>
-  <div style="color:#fff;opacity:.85;margin-top:10px">Tippe/klicke/Leertaste zum Fliegen · Upgrades alle 10 Punkte · Downgrade statt Tod</div>
-</div>
-<div id=panel><h3>Lautstärke</h3><div class=inputrow>Musik <input id=volMusic class=range type=range min=0 max=1 step=0.01 value=0.6></div><div class=inputrow>SFX <input id=volSfx class=range type=range min=0 max=1 step=0.01 value=0.8></div><div class=inputrow><button onclick=toggleAds()>Werbung umschalten</button><span id=adsHint>„Werbung entfernen“ (IAP) – Demo</span></div></div>
-<div id=shop><div class=shopitem><span>Remove Ads</span><button onclick="buy('remove_ads')">2,99 €</button></div><div class=shopitem><span>1000 Coins</span><button onclick="buy('coins_1000')">0,99 €</button></div><div class=shopitem><span>Starter Pack (Remove Ads + 3000 Coins)</span><button onclick="buy('starter_pack')">3,99 €</button></div><div style="margin-top:8px;font-size:.9em;opacity:.85">Hinweis: Demo‑Shop (PWA). Echte Käufe später im App‑Wrapper.</div></div>
-<div id=hudL class=hidden><span>Score</span><span class=num id=score>0</span> · <span>Best</span><span class=num id=bestLocal>0</span></div>
-<div id=hudR class=hidden><div class=eggIcon></div><span id=eggCount>0</span></div>
-<div id=globalBar class=hidden>Globaler Highscore: <span id=globalHS2>—</span></div>
-<div id=over class="screen hidden"><div style="font-size:2.2em;font-weight:900;margin-bottom:8px;">GAME OVER</div><div style="font-size:1.2em;margin-bottom:6px"><span id=finalScore>Score: 0</span></div><div style="font-size:1.1em;margin-bottom:10px"><span id=eggSummary>Eier gesammelt: 0</span></div><div style="opacity:.85" id=best>Bester (Lokal): 0</div><div class=row style="margin-top:14px"><button onclick=restart()>NOCHMAL</button><button class=ghost onclick=backToMenu()>MENÜ</button></div></div>
-<div id=gift onclick=claimGift()>🎁 Gift</div>
-<canvas id=canvas></canvas></div>
-<audio id=musicA src=harp1.mp3 preload=auto loop></audio><audio id=musicB src=harp2.mp3 preload=auto loop></audio>
+<!DOCTYPE html><html lang="de"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png">
+<title>Fluffy Wingz – Beach Edition</title>
+<style>
+html,body{height:100%;margin:0}body{background:#0a2b4f;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden}
+#hud{position:fixed;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;color:#fff;font-weight:800;text-shadow:0 2px 4px rgba(0,0,0,.5)}
+#hud .pill{background:rgba(0,0,0,.35);padding:6px 10px;border-radius:999px}
+#menu,#over{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#menu{background:radial-gradient(900px 500px at 50% 120%,#0a2b4f 0%,#04182d 70%,#020b15 100%);color:#ffdba0}
+button{padding:12px 20px;border:0;border-radius:30px;background:linear-gradient(135deg,#FFB000,#FF7A00);font-weight:900;color:#fff;cursor:pointer}
+.hidden{display:none}canvas{display:block;width:100vw;height:100vh}
+</style></head><body>
+<div id="hud" class="hidden"><div class="pill">Score: <span id="score">0</span></div><div class="pill">Best: <span id="best">0</span></div></div>
+<div id="menu"><h1 style="font-size:2.2em;margin-bottom:8px">Fluffy Wingz – Beach Edition</h1>
+<p>Pixar-Strand • Palmen-Hindernisse • Bonus-Ringe • Goldene Abend-Eier</p><div style="height:12px"></div>
+<button onclick="start()">Start</button> <button onclick="toggleMute()" style="background:#333">🔊</button></div>
+<div id="over" class="hidden"><h2>GAME OVER</h2><p id="final">Score: 0</p><button onclick="restart()">Nochmal</button></div>
+<canvas id="c"></canvas>
 <script>
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));}
-let SETTINGS=JSON.parse(localStorage.getItem('fw_settings')||'{}');SETTINGS.music??=0.6;SETTINGS.sfx??=0.8;SETTINGS.ads??=true;
-let COINS=parseInt(localStorage.getItem('fw_coins')||'0');let LAST_GIFT=parseInt(localStorage.getItem('fw_last_gift')||'0');
-function saveSettings(){localStorage.setItem('fw_settings',JSON.stringify(SETTINGS));}function saveCoins(){localStorage.setItem('fw_coins',COINS);}function saveGift(){localStorage.setItem('fw_last_gift',Date.now());}
-const MUSIC_SWITCH_MS=300000,MUSIC_TRACKS=['harp1.mp3','harp2.mp3','harp3.mp3'];const LEADERBOARD_ENDPOINT=null;let BOSS_MODE=false;
-const LEVELS={easy:{speed:2.6,gap:170,pipeEvery:100,eggEvery:190,gravity:0.45},normal:{speed:3.0,gap:150,pipeEvery:90,eggEvery:180,gravity:0.50},hard:{speed:3.6,gap:135,pipeEvery:80,eggEvery:165,gravity:0.52},insane:{speed:4.2,gap:120,pipeEvery:70,eggEvery:150,gravity:0.54},progress:{speed:2.8,gap:160,pipeEvery:90,eggEvery:180,gravity:0.50}};
-const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');canvas.width=420;canvas.height=620;
-const hudScore=document.getElementById('score'),hudEggs=document.getElementById('eggCount'),bestLocalEl=document.getElementById('bestLocal');
-const globalHS1=document.getElementById('globalHS'),globalHS2=document.getElementById('globalHS2');document.getElementById('adsStatus').textContent='Werbung: '+(SETTINGS.ads?'AN':'AUS');
-const AC=(window.AudioContext||window.webkitAudioContext)?new (window.AudioContext||window.webkitAudioContext)():null;
-function tone(f=800,d=.07,t='sine',v=null){if(!AC)return;const ct=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type=t;o.frequency.value=f;g.gain.value=(v==null?SETTINGS.sfx*0.12:v);o.connect(g).connect(AC.destination);o.start(ct);o.stop(ct+d);}
-const mA=document.getElementById('musicA'),mB=document.getElementById('musicB');let musicIndex=0,activeA=true;mA.volume=SETTINGS.music;mB.volume=0;
-function startMusic(){crossplay();setInterval(nextTrack,MUSIC_SWITCH_MS);}function crossplay(){const track=MUSIC_TRACKS[musicIndex%MUSIC_TRACKS.length];if(activeA){mA.src=track;safePlay(mA);fade(mB,0);fade(mA,SETTINGS.music);}else{mB.src=track;safePlay(mB);fade(mA,0);fade(mB,SETTINGS.music);}activeA=!activeA;}function nextTrack(){musicIndex++;crossplay();}
-function fade(a,t){if(!a)return;const step=(t-a.volume)/25;const id=setInterval(()=>{a.volume=Math.max(0,Math.min(1,a.volume+step));if(Math.abs(a.volume-t)<0.02){a.volume=t;clearInterval(id)}},120);}function safePlay(a){a.currentTime=0;a.play().catch(()=>{});}
-function toggleAds(){SETTINGS.ads=!SETTINGS.ads;saveSettings();document.getElementById('adsStatus').textContent='Werbung: '+(SETTINGS.ads?'AN':'AUS');alert(SETTINGS.ads?'Werbung aktiviert (Demo)':'Werbung entfernt (Demo)');}
-function showInterstitial(){if(!SETTINGS.ads)return;console.log('Show interstitial (stub)');}
-function showRewarded(reason,done){if(!SETTINGS.ads){done&&done();return;}const ok=confirm('Bonus‑Clip ansehen für: '+reason+' ? (Demo)');if(ok){setTimeout(()=>done&&done(),800);}}
-function toggleShop(){const el=document.getElementById('shop');el.style.display=(el.style.display==='none'||!el.style.display)?'block':'none';}
-function buy(id){if(id==='remove_ads'){SETTINGS.ads=false;saveSettings();document.getElementById('adsStatus').textContent='Werbung: AUS';alert('Remove Ads gekauft (Demo)');return;}if(id==='coins_1000'){COINS+=1000;saveCoins();alert('1000 Coins gutgeschrieben (Demo)');return;}if(id==='starter_pack'){SETTINGS.ads=false;COINS+=3000;saveSettings();saveCoins();document.getElementById('adsStatus').textContent='Werbung: AUS';alert('Starter Pack aktiviert (Demo)');return;}}
-const GIFT_INTERVAL=4*60*60*1000;function updateGift(){const el=document.getElementById('giftTimer');const now=Date.now(),due=(LAST_GIFT||0)+GIFT_INTERVAL;const left=Math.max(0,due-now);const mm=Math.floor(left/60000),ss=Math.floor((left%60000)/1000);el.textContent=(left>0?String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0'):'bereit');}function claimGift(){const now=Date.now();if((LAST_GIFT||0)+GIFT_INTERVAL>now){alert('Noch nicht bereit');return;}LAST_GIFT=now;saveGift();const reward=500+Math.floor(Math.random()*1000);COINS+=reward;saveCoins();alert('Geschenk: '+reward+' Coins!');}
-async function fetchGlobal(){if(!LEADERBOARD_ENDPOINT){globalHS1.textContent='Demo';globalHS2.textContent='Demo';return;}try{const r=await fetch(LEADERBOARD_ENDPOINT),j=await r.json();globalHS1.textContent=j.top||0;globalHS2.textContent=j.top||0;}catch(e){globalHS1.textContent='—';globalHS2.textContent='—';}}
-async function postScore(score){if(!LEADERBOARD_ENDPOINT)return;try{await fetch(LEADERBOARD_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({score})});}catch(e){}}
-function togglePanel(){const el=document.getElementById('panel');el.style.display=(el.style.display==='none'||!el.style.display)?'block':'none';}
-document.getElementById('volMusic').addEventListener('input',e=>{SETTINGS.music=parseFloat(e.target.value);saveSettings();(activeA?mB:mA).volume=0;(activeA?mA:mB).volume=SETTINGS.music;});
-document.getElementById('volSfx').addEventListener('input',e=>{SETTINGS.sfx=parseFloat(e.target.value);saveSettings();});
-let cloudsBack=[],cloudsFront=[];let CFG=LEVELS.normal,theme=0,lastThemeScore=0;
-let game={state:'menu',score:0,eggs:0,best:parseInt(localStorage.getItem('fw_best')||'0'),frame:0,speed:3,level:'normal',levelStep:0,upgrades:[]};
-const bird={x:100,y:300,vy:0,size:30,rot:0,thin:false,colorShift:0,wings:false,beak:false};
-let pipes=[],eggs=[],sparkles=[],floaters=[];
-function runIntro(){setTimeout(()=>{intro.classList.add('hidden');menu.classList.remove('hidden');},1200);startMusic();fetchGlobal();}const intro=document.getElementById('intro'),menu=document.getElementById('menu'),over=document.getElementById('over');runIntro();
-function backToMenu(){over.classList.add('hidden');menu.classList.remove('hidden');document.getElementById('hudL').classList.add('hidden');document.getElementById('hudR').classList.add('hidden');document.getElementById('globalBar').classList.remove('hidden');game.state='menu';}
-function pickLevel(id){CFG={...LEVELS[id]};game.level=id;start();}
-function toggleBoss(){BOSS_MODE=!BOSS_MODE;document.getElementById('bossState').textContent=BOSS_MODE?'AN':'AUS';}
-function start(){menu.classList.add('hidden');document.getElementById('hudL').classList.remove('hidden');document.getElementById('hudR').classList.remove('hidden');document.getElementById('globalBar').classList.remove('hidden');resetCore();game.state='play';loop();}
-function restart(){over.classList.add('hidden');document.getElementById('hudL').classList.remove('hidden');document.getElementById('hudR').classList.remove('hidden');document.getElementById('globalBar').classList.remove('hidden');resetCore();game.state='play';loop();}
-function resetCore(){Object.assign(game,{score:0,eggs:0,frame:0,speed:CFG.speed,upgrades:[]});Object.assign(bird,{y:300,vy:0,rot:0,thin:false,colorShift:0,wings:false,beak:false});pipes.length=eggs.length=sparkles.length=floaters.length=0;hudScore.textContent=0;hudEggs.textContent=0;bestLocalEl.textContent=game.best;theme=0;lastThemeScore=0;}
-function flap(){if(game.state==='play'){bird.vy=-8;bird.rot=-0.35;tone(900,.05,'triangle');}}
-canvas.addEventListener('click',flap);canvas.addEventListener('touchstart',e=>{e.preventDefault();flap();});document.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();flap();}});
-function spawnPipe(){const gap=CFG.gap,minY=100,maxY=canvas.height-gap-100;let y=Math.random()*(maxY-minY)+minY;if(BOSS_MODE) y+=Math.sin(game.frame*0.03)*20;pipes.push({x:canvas.width,y,gap,scored:false,w:60});}
-function spawnEgg(){const r=15,marginTop=80,marginBottom=80;const minY=marginTop,maxY=canvas.height-50-marginBottom-r*2;let y=Math.random()*(maxY-minY)+minY;if(pipes.length){const p=pipes[pipes.length-1];const center=p.y+p.gap/2;if(Math.random()<0.6) y=center+(Math.random()*40-20);}y=Math.max(r+40,Math.min(canvas.height-50-r-40,y));eggs.push({x:canvas.width,y,r,collected:false,t:0});for(let i=0;i<10;i++){sparkles.push({x:canvas.width,y:y,a:1,s:Math.random()*1.4+0.6,ang:Math.random()*Math.PI*2,v:Math.random()*0.8+0.3});}}
-function grantUpgrade(k){if(k==='wings') bird.wings=true;if(k==='beak') bird.beak=true;if(k==='color') bird.colorShift=(bird.colorShift+1)%6;if(k==='glide') bird.thin=true;game.upgrades.push(k);floaters.push({x:bird.x+10,y:bird.y-20,text:'+'+k.toUpperCase(),a:1,vy:-0.6});}
-function loseOneUpgrade(){const lost=game.upgrades.pop();if(!lost) return false;if(lost==='wings') bird.wings=false;if(lost==='beak') bird.beak=false;if(lost==='color') bird.colorShift=(bird.colorShift+5)%6;if(lost==='glide') bird.thin=false;floaters.push({x:bird.x+10,y:bird.y-20,text:'−'+lost.toUpperCase(),a:1,vy:-0.6});tone(260,.08,'sawtooth');return true;}
-function applyMilestones(){const s=game.score;if(s>=10&&!game.upgrades.includes('wings')) grantUpgrade('wings');if(s>=20&&!game.upgrades.includes('beak')) grantUpgrade('beak');if(s>=30&&!game.upgrades.includes('color')) grantUpgrade('color');if(s>=40&&!game.upgrades.includes('glide')) grantUpgrade('glide');if(s-lastThemeScore>=30){lastThemeScore=s;theme=(theme+1)%4;}if(game.level==='progress'&&s>0&&s%25===0&&game.levelStep!==s){game.levelStep=s;CFG.speed=Math.min(CFG.speed+0.15,5.2);CFG.gap=Math.max(CFG.gap-6,110);}}
-function update(){game.frame++;applyMilestones();for(const c of cloudsBack){c.x-=game.speed*0.20*c.s;if(c.x<-120)c.x=canvas.width+80;}for(const c of cloudsFront){c.x-=game.speed*0.35*c.s;if(c.x<-140)c.x=canvas.width+100;}const gravity=bird.thin?CFG.gravity*0.92:CFG.gravity;bird.vy+=gravity;bird.y+=bird.vy;bird.rot=bird.rot*0.92+Math.min(Math.max(bird.vy*0.02,-0.4),0.6)*0.35;if(bird.y>canvas.height-50||bird.y<0){if(!loseOneUpgrade()){return gameOver();}else{bird.vy=-4;bird.y=Math.min(Math.max(10,bird.y),canvas.height-60);}}if(game.frame%CFG.pipeEvery===0) spawnPipe();if(game.frame%CFG.eggEvery===0) spawnEgg();for(const p of pipes){p.x-=game.speed*(BOSS_MODE?1.05:1);if(!p.scored&&p.x+p.w<bird.x){p.scored=true;game.score++;hudScore.textContent=game.score;tone(600,.04,'sine');}if(bird.x+bird.size>p.x&&bird.x<p.x+p.w){const cx=bird.x+bird.size*0.55,cy=bird.y+bird.size*0.55,rx=(bird.size*(bird.thin?0.45:0.55)),ry=bird.size*0.45;const inTop=cy-ry<p.y,inBottom=cy+ry>p.y+p.gap;if(inTop||inBottom){if(!loseOneUpgrade()){return gameOver();}else{bird.vy=-6;bird.y=Math.max(10,Math.min(canvas.height-60,cy));}}}}pipes=pipes.filter(p=>p.x>-80);for(const e of eggs){e.x-=game.speed;e.t+=0.1;const dx=(bird.x+bird.size*0.6)-e.x,dy=(bird.y+bird.size*0.6)-e.y;let eggValue=5+(bird.beak?1:0);if(!e.collected&&Math.hypot(dx,dy)<(bird.size*(bird.thin?0.45:0.55))+e.r){e.collected=true;game.eggs+=1;game.score+=eggValue;hudEggs.textContent=game.eggs;hudScore.textContent=game.score;floaters.push({x:e.x,y:e.y-12,text:'+'+eggValue,a:1,vy:-0.6}); if(Math.random()<0.15){showRewarded('Bonus‑Flügel',()=>{grantUpgrade('wings');});}}}eggs=eggs.filter(e=>e.x+e.r>0&&!e.collected);for(const s of sparkles){s.x+=Math.cos(s.ang)*s.v-game.speed;s.y+=Math.sin(s.ang)*s.v*0.4;s.a-=0.01;}sparkles=sparkles.filter(s=>s.a>0);for(const f of floaters){f.y+=f.vy;f.a-=0.02;}floaters=floaters.filter(f=>f.a>0);}
-function gameOver(){game.state='over';showInterstitial();if(game.score>game.best){game.best=game.score;localStorage.setItem('fw_best',game.best);}finalScore.textContent='Score: '+game.score;eggSummary.textContent='Eier gesammelt: '+game.eggs;best.textContent='Bester (Lokal): '+game.best;over.classList.remove('hidden');document.getElementById('hudL').classList.add('hidden');document.getElementById('hudR').classList.add('hidden');document.getElementById('globalBar').classList.add('hidden');postScore(game.score);}
-let birdImg=new Image();birdImg.src='./bird_sprite.png';
-function cloud(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='rgba(255,255,255,.95)';ctx.beginPath();ctx.arc(0,0,22,0,Math.PI*2);ctx.arc(20,-8,18,0,Math.PI*2);ctx.arc(38,0,26,0,Math.PI*2);ctx.arc(20,10,20,0,Math.PI*2);ctx.fill();ctx.restore();}
-function drawSky(){const g=ctx.createLinearGradient(0,0,0,canvas.height);if(theme===0){g.addColorStop(0,'#0a2b4f');g.addColorStop(0.5,'#1b4f7d');g.addColorStop(1,'#97d9ff');}if(theme===1){g.addColorStop(0,'#5c1f5f');g.addColorStop(0.5,'#d16d5a');g.addColorStop(1,'#ffd29b');}if(theme===2){g.addColorStop(0,'#04060b');g.addColorStop(0.5,'#0b1740');g.addColorStop(1,'#2d3f6b');}if(theme===3){g.addColorStop(0,'#152f59');g.addColorStop(0.5,'#3a78b1');g.addColorStop(1,'#c6e7ff');}ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);}
-function draw(){drawSky();for(const c of cloudsBack) cloud(c.x,c.y,c.s*0.9);for(const c of cloudsFront) cloud(c.x,c.y,c.s*1.1);ctx.fillStyle=theme===2?'#0c3b12':'#228B22';ctx.fillRect(0,canvas.height-50,canvas.width,50);for(const p of pipes){ctx.fillStyle=(game.upgrades.includes('color')?'#27AE60':'#2ECC71');ctx.fillRect(p.x,0,p.w,p.y);ctx.fillRect(p.x,p.y+p.gap,p.w,canvas.height-p.y-p.gap);ctx.strokeStyle='#1e8c56';ctx.lineWidth=3;ctx.strokeRect(p.x,0,p.w,p.y);ctx.strokeRect(p.x,p.y+p.gap,p.w,canvas.height-p.y-p.gap);}for(const e of eggs){ctx.save();ctx.shadowColor='rgba(255,215,0,0.6)';ctx.shadowBlur=18;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.ellipse(e.x,e.y,e.r,e.r*1.3,0,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#FFE57F';ctx.beginPath();ctx.ellipse(e.x-e.r*0.1,e.y-e.r*0.35,e.r*0.7+Math.sin(e.t)*0.4,e.r*0.32,0,0,Math.PI*2);ctx.fill();ctx.restore();}if(birdImg.complete){const h=birdImg.height,w=birdImg.width,sc=((bird.size*2)/h),dw=w*sc,dh=h*sc;const cx=bird.x+(bird.thin?bird.size*0.35:bird.size*0.5),cy=bird.y+bird.size*0.5;ctx.save();ctx.translate(cx,cy);ctx.rotate(bird.rot);ctx.drawImage(birdImg,-dw/2,-dh/2,dw,dh);if(game.upgrades.includes('color')){ctx.globalCompositeOperation='hue';ctx.fillStyle='#ffd776';ctx.fillRect(-dw/2,-dh/2,dw,dh);ctx.globalCompositeOperation='source-over';}if(bird.wings){ctx.globalAlpha=.25;ctx.beginPath();ctx.ellipse(0,0,dw*.6,dh*.9,0,0,Math.PI*2);ctx.fillStyle='#ffd776';ctx.fill();ctx.globalAlpha=1;}ctx.restore();}for(const s of sparkles){ctx.globalAlpha=s.a;ctx.fillStyle='#FFF8B0';ctx.beginPath();ctx.arc(s.x,s.y,s.s,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}for(const f of floaters){ctx.globalAlpha=f.a;ctx.font='bold 20px Arial';ctx.fillStyle='#FF7A00';ctx.fillText(f.text,f.x-10,f.y);ctx.globalAlpha=1;}}
-function loop(){if(game.state!=='play') return;update();draw();requestAnimationFrame(loop);}
-for(let i=0;i<6;i++) cloudsBack.push({x:Math.random()*canvas.width,y:60+Math.random()*200,s:.6+Math.random()*0.5});
-for(let i=0;i<5;i++) cloudsFront.push({x:Math.random()*canvas.width,y:220+Math.random()*260,s:.9+Math.random()*0.7});
-setInterval(()=>{const now=performance.now();},1000);
-function run(){}
-setInterval(()=>{const el=document.getElementById('giftTimer');updateGift();},1000);
+if('serviceWorker'in navigator){addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));}
+
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}addEventListener('resize',resize);resize();
+
+const STAGES=[{m:0,img:'bird_stage1_3D.png'},{m:10,img:'bird_stage2_3D.png'},{m:20,img:'bird_stage3_3D.png'},{m:30,img:'bird_stage4_3D.png'},{m:40,img:'bird_stage5_3D.png'}];
+const imgs=STAGES.map(s=>{const i=new Image(); i.src=s.img; return i;});
+let stage=0, flash=0, best=+localStorage.getItem('fw_best_beach')||0;
+let score=0, frame=0, speed=3.1, gravity=0.50;
+const bird={x:140,y:260,vy:0,size:48,rot:0};
+let palms=[],rings=[],eggs=[];
+const TOD={MORNING:0,DAY:1,EVENING:2,NIGHT:3}; let tod=TOD.DAY, todT=0, TOD_DUR=180000;
+let holding=false, muted=false;
+
+const hud=document.getElementById('hud'), menu=document.getElementById('menu'), over=document.getElementById('over');
+const elScore=document.getElementById('score'), elBest=document.getElementById('best'), elFinal=document.getElementById('final');
+function toggleMute(){muted=!muted;}
+canvas.addEventListener('pointerdown',()=>{holding=true; flap();});
+canvas.addEventListener('pointerup',()=>{holding=false;});
+addEventListener('keydown',e=>{if(e.code==='Space'){flap();}});
+
+function start(){menu.classList.add('hidden');hud.classList.remove('hidden'); reset(); loop();}
+function restart(){over.classList.add('hidden');hud.classList.remove('hidden'); reset(); loop();}
+function reset(){score=0;frame=0;speed=3.1;gravity=0.50;palms.length=rings.length=eggs.length=0;bird.y=canvas.height*0.45;bird.vy=0;stage=0;flash=0;elScore.textContent=0;elBest.textContent=best;}
+function flap(){bird.vy=-8; if(!muted){} }
+function onHit(){ if(stage>0){stage--; flash=0.6; bird.vy=-5; return;} gameOver(); }
+function gameOver(){over.classList.remove('hidden');hud.classList.add('hidden'); if(score>best){best=score;localStorage.setItem('fw_best_beach',best);} elFinal.textContent='Score: '+score;}
+
+function setGrad(g){
+  if(tod===0){g.addColorStop(0,'#FFE9C9');g.addColorStop(1,'#9ED4FF');}
+  if(tod===1){g.addColorStop(0,'#BFE4FF');g.addColorStop(1,'#6EC1FF');}
+  if(tod===2){g.addColorStop(0,'#FFB07A');g.addColorStop(1,'#6A77FF');}
+  if(tod===3){g.addColorStop(0,'#04122A');g.addColorStop(1,'#0B2B50');}
+}
+function drawBackground(dt){
+  todT+=dt; if(todT>TOD_DUR){todT=0; tod=(tod+1)%4;}
+  let g=ctx.createLinearGradient(0,0,0,canvas.height); setGrad(g); ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
+  const seaY = canvas.height*0.65;
+  let sg=ctx.createLinearGradient(0,seaY,0,canvas.height);
+  if(tod===3){sg.addColorStop(0,'#0A2F4A');sg.addColorStop(1,'#061E30');}
+  else{sg.addColorStop(0,'#3DA3D9');sg.addColorStop(1,'#0E6FA5');}
+  ctx.fillStyle=sg; ctx.fillRect(0,seaY,canvas.width,canvas.height-seaY);
+  ctx.globalAlpha=.25; ctx.strokeStyle='white'; ctx.lineWidth=1.2;
+  for(let i=0;i<3;i++){ ctx.beginPath(); const y=seaY+12+i*12;
+    for(let x=0;x<canvas.width;x+=6){ ctx.lineTo(x,y+Math.sin((x+performance.now()/12)/30+i)*2);}
+    ctx.stroke(); }
+  ctx.globalAlpha=1;
+  const sandY=canvas.height*0.80;
+  let bg=ctx.createLinearGradient(0,sandY,0,canvas.height); bg.addColorStop(0,'#EFD49B'); bg.addColorStop(1,'#D9B774');
+  ctx.fillStyle=bg; ctx.fillRect(0,sandY,canvas.width,canvas.height-sandY);
+}
+
+function spawnPalmCluster(){
+  const gap=160, minY=140, maxY=canvas.height*0.65-gap-80;
+  const top=Math.random()*(maxY-minY)+minY; const w=42;
+  palms.push({x:canvas.width, top:0, h:top, w});
+  palms.push({x:canvas.width, top:top+gap, h:(canvas.height*0.65)-(top+gap), w});
+}
+function spawnRing(){
+  const y=160 + Math.random()*(canvas.height*0.65-240);
+  rings.push({x:canvas.width+60, y, r:28, passed:false});
+}
+function spawnEggReachable(){
+  const latest=palms.slice(-2);
+  let minY=120, maxY=canvas.height*0.65-120, y;
+  if(latest.length===2){
+    const top=latest[0].h, bottom=latest[1].top, center=top+(bottom-top)/2;
+    minY=Math.max(100, top+24); maxY=Math.min(canvas.height*0.65-80, bottom-24);
+    y=Math.max(minY, Math.min(maxY, center+(Math.random()*40-20)));
+  } else { y=Math.random()*(maxY-minY)+minY; }
+  const gold=(tod===2||tod===3);
+  eggs.push({x:canvas.width+30,y,r:14,gold,taken:false,t:0});
+}
+
+function moveCull(arr, vel){ for(const a of arr){a.x-=vel;} return arr.filter(a=>a.x>-80); }
+function updateWorld(){ palms = moveCull(palms, speed); rings = moveCull(rings, speed*1.05); eggs = moveCull(eggs,  speed); }
+
+function drawPalm(p){
+  ctx.fillStyle='#6F4E37'; ctx.fillRect(p.x, p.top, p.w, p.h);
+  ctx.fillStyle='#2EA84A';
+  for(let i=0;i<3;i++){ const y=(p.top===0)?(p.h-18+i*6):(p.top+i*6);
+    ctx.beginPath(); ctx.ellipse(p.x+p.w/2, y, 24, 10, 0, 0, Math.PI*2); ctx.fill();
+  }
+}
+function drawRing(r){
+  const grad=ctx.createRadialGradient(r.x,r.y,4,r.x,r.y,r.r);
+  grad.addColorStop(0,'rgba(255,240,180,0.9)'); grad.addColorStop(1,'rgba(255,160,0,0.2)');
+  ctx.fillStyle=grad; ctx.beginPath(); ctx.arc(r.x,r.y,r.r,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='rgba(255,190,60,0.85)'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(r.x,r.y,r.r,0,Math.PI*2); ctx.stroke();
+}
+function drawEgg(e){
+  ctx.save(); ctx.shadowColor=e.gold?'rgba(255,215,0,0.6)':'rgba(255,255,255,0.35)'; ctx.shadowBlur=e.gold?18:10;
+  ctx.fillStyle=e.gold?'#FFD700':'#FFF4C6'; ctx.beginPath(); ctx.ellipse(e.x,e.y,e.r,e.r*1.25,0,0,Math.PI*2); ctx.fill(); ctx.restore();
+}
+function drawBird(){
+  const img = imgs[stage]; if(!img.complete) return;
+  const h=img.height, w=img.width, scale=(bird.size*2)/h, dw=w*scale, dh=h*scale;
+  const cx=bird.x+bird.size*0.5, cy=bird.y+bird.size*0.5;
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(bird.rot);
+  if(flash>0){ ctx.filter=`brightness(${1+flash*0.8})`; flash*=0.9; }
+  ctx.drawImage(img,-dw/2,-dh/2,dw,dh); ctx.filter='none'; ctx.restore();
+}
+
+function hitPalm(p){ const bx=bird.x, by=bird.y, bw=bird.size, bh=bird.size;
+  return (bx+bw>p.x && bx<p.x+p.w && by+bh>p.top && by<p.top+p.h); }
+function hitRing(r){ const cx=bird.x+bird.size*0.5, cy=bird.y+bird.size*0.5;
+  return Math.hypot(cx-r.x, cy-r.y) < (r.r + bird.size*0.45); }
+function hitEgg(e){ const cx=bird.x+bird.size*0.5, cy=bird.y+bird.size*0.5;
+  return Math.hypot(cx-e.x, cy-e.y) < (e.r + bird.size*0.45); }
+
+function eggValue(e){ return e.gold?10:5; }
+function updateStage(){ let s=0; for(let i=0;i<STAGES.length;i++){ if(score>=STAGES[i].m) s=i; } if(s>stage){ flash=1.0; } stage=s; }
+
+let lastTS=0;
+function loop(ts=0){
+  const dt = Math.min(32, ts-lastTS||16); lastTS=ts;
+  frame++;
+  bird.vy += gravity; if(holding) bird.vy=Math.min(bird.vy, -1.2);
+  bird.y += bird.vy; bird.rot = bird.rot*0.92 + Math.min(Math.max(bird.vy*0.02,-0.4),0.6)*0.35;
+  if (bird.y<0 || bird.y>canvas.height*0.95){ onHit(); bird.y=Math.max(0, Math.min(canvas.height*0.95, bird.y)); }
+  if(frame%95===0)  spawnPalmCluster();
+  if(frame%140===0) spawnRing();
+  if(frame%60===0)  spawnEggReachable();
+  updateWorld();
+  for(const p of palms){ if(hitPalm(p)){ onHit(); break; } }
+  for(const r of rings){ if(!r.passed && hitRing(r)){ r.passed=true; score+=5; } }
+  for(const e of eggs){ if(!e.taken && hitEgg(e)){ e.taken=true; score+=eggValue(e); } }
+  updateStage();
+  drawBackground(dt); for(const p of palms) drawPalm(p); for(const r of rings) drawRing(r); for(const e of eggs) drawEgg(e); drawBird();
+  elScore.textContent=score; requestAnimationFrame(loop);
+}
 </script></body></html>
