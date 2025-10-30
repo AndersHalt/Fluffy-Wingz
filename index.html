@@ -1,153 +1,43 @@
-<!DOCTYPE html><html lang="de"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png">
-<title>Fluffy Wingz – Beach Edition</title>
-<style>
-html,body{height:100%;margin:0}body{background:#0a2b4f;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden}
-#hud{position:fixed;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;color:#fff;font-weight:800;text-shadow:0 2px 4px rgba(0,0,0,.5)}
-#hud .pill{background:rgba(0,0,0,.35);padding:6px 10px;border-radius:999px}
-#menu,#over{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-#menu{background:radial-gradient(900px 500px at 50% 120%,#0a2b4f 0%,#04182d 70%,#020b15 100%);color:#ffdba0}
-button{padding:12px 20px;border:0;border-radius:30px;background:linear-gradient(135deg,#FFB000,#FF7A00);font-weight:900;color:#fff;cursor:pointer}
-.hidden{display:none}canvas{display:block;width:100vw;height:100vh}
-</style></head><body>
-<div id="hud" class="hidden"><div class="pill">Score: <span id="score">0</span></div><div class="pill">Best: <span id="best">0</span></div></div>
-<div id="menu"><h1 style="font-size:2.2em;margin-bottom:8px">Fluffy Wingz – Beach Edition</h1>
-<p>Pixar-Strand • Palmen-Hindernisse • Bonus-Ringe • Goldene Abend-Eier</p><div style="height:12px"></div>
-<button onclick="start()">Start</button> <button onclick="toggleMute()" style="background:#333">🔊</button></div>
-<div id="over" class="hidden"><h2>GAME OVER</h2><p id="final">Score: 0</p><button onclick="restart()">Nochmal</button></div>
-<canvas id="c"></canvas>
-<script>
-if('serviceWorker'in navigator){addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));}
-
-const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
-function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}addEventListener('resize',resize);resize();
-
-const STAGES=[{m:0,img:'bird_stage1_3D.png'},{m:10,img:'bird_stage2_3D.png'},{m:20,img:'bird_stage3_3D.png'},{m:30,img:'bird_stage4_3D.png'},{m:40,img:'bird_stage5_3D.png'}];
-const imgs=STAGES.map(s=>{const i=new Image(); i.src=s.img; return i;});
-let stage=0, flash=0, best=+localStorage.getItem('fw_best_beach')||0;
-let score=0, frame=0, speed=3.1, gravity=0.50;
-const bird={x:140,y:260,vy:0,size:48,rot:0};
-let palms=[],rings=[],eggs=[];
-const TOD={MORNING:0,DAY:1,EVENING:2,NIGHT:3}; let tod=TOD.DAY, todT=0, TOD_DUR=180000;
-let holding=false, muted=false;
-
-const hud=document.getElementById('hud'), menu=document.getElementById('menu'), over=document.getElementById('over');
-const elScore=document.getElementById('score'), elBest=document.getElementById('best'), elFinal=document.getElementById('final');
-function toggleMute(){muted=!muted;}
-canvas.addEventListener('pointerdown',()=>{holding=true; flap();});
-canvas.addEventListener('pointerup',()=>{holding=false;});
-addEventListener('keydown',e=>{if(e.code==='Space'){flap();}});
-
-function start(){menu.classList.add('hidden');hud.classList.remove('hidden'); reset(); loop();}
-function restart(){over.classList.add('hidden');hud.classList.remove('hidden'); reset(); loop();}
-function reset(){score=0;frame=0;speed=3.1;gravity=0.50;palms.length=rings.length=eggs.length=0;bird.y=canvas.height*0.45;bird.vy=0;stage=0;flash=0;elScore.textContent=0;elBest.textContent=best;}
-function flap(){bird.vy=-8; if(!muted){} }
-function onHit(){ if(stage>0){stage--; flash=0.6; bird.vy=-5; return;} gameOver(); }
-function gameOver(){over.classList.remove('hidden');hud.classList.add('hidden'); if(score>best){best=score;localStorage.setItem('fw_best_beach',best);} elFinal.textContent='Score: '+score;}
-
-function setGrad(g){
-  if(tod===0){g.addColorStop(0,'#FFE9C9');g.addColorStop(1,'#9ED4FF');}
-  if(tod===1){g.addColorStop(0,'#BFE4FF');g.addColorStop(1,'#6EC1FF');}
-  if(tod===2){g.addColorStop(0,'#FFB07A');g.addColorStop(1,'#6A77FF');}
-  if(tod===3){g.addColorStop(0,'#04122A');g.addColorStop(1,'#0B2B50');}
-}
-function drawBackground(dt){
-  todT+=dt; if(todT>TOD_DUR){todT=0; tod=(tod+1)%4;}
-  let g=ctx.createLinearGradient(0,0,0,canvas.height); setGrad(g); ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
-  const seaY = canvas.height*0.65;
-  let sg=ctx.createLinearGradient(0,seaY,0,canvas.height);
-  if(tod===3){sg.addColorStop(0,'#0A2F4A');sg.addColorStop(1,'#061E30');}
-  else{sg.addColorStop(0,'#3DA3D9');sg.addColorStop(1,'#0E6FA5');}
-  ctx.fillStyle=sg; ctx.fillRect(0,seaY,canvas.width,canvas.height-seaY);
-  ctx.globalAlpha=.25; ctx.strokeStyle='white'; ctx.lineWidth=1.2;
-  for(let i=0;i<3;i++){ ctx.beginPath(); const y=seaY+12+i*12;
-    for(let x=0;x<canvas.width;x+=6){ ctx.lineTo(x,y+Math.sin((x+performance.now()/12)/30+i)*2);}
-    ctx.stroke(); }
-  ctx.globalAlpha=1;
-  const sandY=canvas.height*0.80;
-  let bg=ctx.createLinearGradient(0,sandY,0,canvas.height); bg.addColorStop(0,'#EFD49B'); bg.addColorStop(1,'#D9B774');
-  ctx.fillStyle=bg; ctx.fillRect(0,sandY,canvas.width,canvas.height-sandY);
-}
-
-function spawnPalmCluster(){
-  const gap=160, minY=140, maxY=canvas.height*0.65-gap-80;
-  const top=Math.random()*(maxY-minY)+minY; const w=42;
-  palms.push({x:canvas.width, top:0, h:top, w});
-  palms.push({x:canvas.width, top:top+gap, h:(canvas.height*0.65)-(top+gap), w});
-}
-function spawnRing(){
-  const y=160 + Math.random()*(canvas.height*0.65-240);
-  rings.push({x:canvas.width+60, y, r:28, passed:false});
-}
-function spawnEggReachable(){
-  const latest=palms.slice(-2);
-  let minY=120, maxY=canvas.height*0.65-120, y;
-  if(latest.length===2){
-    const top=latest[0].h, bottom=latest[1].top, center=top+(bottom-top)/2;
-    minY=Math.max(100, top+24); maxY=Math.min(canvas.height*0.65-80, bottom-24);
-    y=Math.max(minY, Math.min(maxY, center+(Math.random()*40-20)));
-  } else { y=Math.random()*(maxY-minY)+minY; }
-  const gold=(tod===2||tod===3);
-  eggs.push({x:canvas.width+30,y,r:14,gold,taken:false,t:0});
-}
-
-function moveCull(arr, vel){ for(const a of arr){a.x-=vel;} return arr.filter(a=>a.x>-80); }
-function updateWorld(){ palms = moveCull(palms, speed); rings = moveCull(rings, speed*1.05); eggs = moveCull(eggs,  speed); }
-
-function drawPalm(p){
-  ctx.fillStyle='#6F4E37'; ctx.fillRect(p.x, p.top, p.w, p.h);
-  ctx.fillStyle='#2EA84A';
-  for(let i=0;i<3;i++){ const y=(p.top===0)?(p.h-18+i*6):(p.top+i*6);
-    ctx.beginPath(); ctx.ellipse(p.x+p.w/2, y, 24, 10, 0, 0, Math.PI*2); ctx.fill();
-  }
-}
-function drawRing(r){
-  const grad=ctx.createRadialGradient(r.x,r.y,4,r.x,r.y,r.r);
-  grad.addColorStop(0,'rgba(255,240,180,0.9)'); grad.addColorStop(1,'rgba(255,160,0,0.2)');
-  ctx.fillStyle=grad; ctx.beginPath(); ctx.arc(r.x,r.y,r.r,0,Math.PI*2); ctx.fill();
-  ctx.strokeStyle='rgba(255,190,60,0.85)'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(r.x,r.y,r.r,0,Math.PI*2); ctx.stroke();
-}
-function drawEgg(e){
-  ctx.save(); ctx.shadowColor=e.gold?'rgba(255,215,0,0.6)':'rgba(255,255,255,0.35)'; ctx.shadowBlur=e.gold?18:10;
-  ctx.fillStyle=e.gold?'#FFD700':'#FFF4C6'; ctx.beginPath(); ctx.ellipse(e.x,e.y,e.r,e.r*1.25,0,0,Math.PI*2); ctx.fill(); ctx.restore();
-}
-function drawBird(){
-  const img = imgs[stage]; if(!img.complete) return;
-  const h=img.height, w=img.width, scale=(bird.size*2)/h, dw=w*scale, dh=h*scale;
-  const cx=bird.x+bird.size*0.5, cy=bird.y+bird.size*0.5;
-  ctx.save(); ctx.translate(cx,cy); ctx.rotate(bird.rot);
-  if(flash>0){ ctx.filter=`brightness(${1+flash*0.8})`; flash*=0.9; }
-  ctx.drawImage(img,-dw/2,-dh/2,dw,dh); ctx.filter='none'; ctx.restore();
-}
-
-function hitPalm(p){ const bx=bird.x, by=bird.y, bw=bird.size, bh=bird.size;
-  return (bx+bw>p.x && bx<p.x+p.w && by+bh>p.top && by<p.top+p.h); }
-function hitRing(r){ const cx=bird.x+bird.size*0.5, cy=bird.y+bird.size*0.5;
-  return Math.hypot(cx-r.x, cy-r.y) < (r.r + bird.size*0.45); }
-function hitEgg(e){ const cx=bird.x+bird.size*0.5, cy=bird.y+bird.size*0.5;
-  return Math.hypot(cx-e.x, cy-e.y) < (e.r + bird.size*0.45); }
-
-function eggValue(e){ return e.gold?10:5; }
-function updateStage(){ let s=0; for(let i=0;i<STAGES.length;i++){ if(score>=STAGES[i].m) s=i; } if(s>stage){ flash=1.0; } stage=s; }
-
-let lastTS=0;
-function loop(ts=0){
-  const dt = Math.min(32, ts-lastTS||16); lastTS=ts;
-  frame++;
-  bird.vy += gravity; if(holding) bird.vy=Math.min(bird.vy, -1.2);
-  bird.y += bird.vy; bird.rot = bird.rot*0.92 + Math.min(Math.max(bird.vy*0.02,-0.4),0.6)*0.35;
-  if (bird.y<0 || bird.y>canvas.height*0.95){ onHit(); bird.y=Math.max(0, Math.min(canvas.height*0.95, bird.y)); }
-  if(frame%95===0)  spawnPalmCluster();
-  if(frame%140===0) spawnRing();
-  if(frame%60===0)  spawnEggReachable();
-  updateWorld();
-  for(const p of palms){ if(hitPalm(p)){ onHit(); break; } }
-  for(const r of rings){ if(!r.passed && hitRing(r)){ r.passed=true; score+=5; } }
-  for(const e of eggs){ if(!e.taken && hitEgg(e)){ e.taken=true; score+=eggValue(e); } }
-  updateStage();
-  drawBackground(dt); for(const p of palms) drawPalm(p); for(const r of rings) drawRing(r); for(const e of eggs) drawEgg(e); drawBird();
-  elScore.textContent=score; requestAnimationFrame(loop);
-}
-</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Fluffy Wingz</title>
+  <link rel="manifest" href="manifest.json">
+  <!-- PWA and theming -->
+  <meta name="theme-color" content="#000000">
+  <style>
+    /* Simple layout for the game canvas and UI overlays. */
+    html,body{margin:0;padding:0;width:100%;height:100%;background:#000;font-family:sans-serif;overflow:hidden;color:#fff}
+    #c{display:block;width:100%;height:100%;background:#000}
+    #menu,#over,#hud{position:absolute;top:0;left:0;width:100%;pointer-events:none;text-align:center;color:#fff}
+    #menu{top:30%;}
+    #menu button,#over button{pointer-events:auto;padding:12px 24px;font-size:18px;border:none;border-radius:6px;background:#cc8833;color:#fff;cursor:pointer}
+    #menu button:hover,#over button:hover{background:#bb7711}
+    #hud{padding:8px;font-size:18px;display:flex;justify-content:center;align-items:center;gap:12px}
+    #hud.hidden,#menu.hidden,#over.hidden{display:none}
+    #muteBtn{pointer-events:auto;padding:4px 8px;font-size:20px;border:none;background:none;color:#fff;cursor:pointer}
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <div id="hud" class="hidden">
+    <span id="s">0</span>
+    &nbsp;|&nbsp;
+    Best: <span id="b">0</span>
+    <button id="muteBtn" title="Toggle sound">🔊</button>
+  </div>
+  <div id="menu">
+    <h1>Fluffy Wingz – Beach Edition</h1>
+    <p>Tap or click to flap your wings. Collect rings and eggs to score points and evolve your bird!</p>
+    <button id="startBtn">Play</button>
+  </div>
+  <div id="over" class="hidden">
+    <h2>Game Over</h2>
+    <p id="final"></p>
+    <button id="againBtn">Play Again</button>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

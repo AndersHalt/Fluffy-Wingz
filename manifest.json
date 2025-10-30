@@ -1,10 +1,11 @@
 {
   "name": "Fluffy Wingz – Beach Edition",
   "short_name": "Fluffy Wingz",
-  "start_url": ".",
+  "description": "Help a fluffy bird survive obstacles, collect rings and eggs, and evolve through vibrant stages in this charming endless flyer.",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0a2b4f",
-  "theme_color": "#FFB000",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "icon-192.png",
