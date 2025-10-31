@@ -1,43 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Fluffy Wingz</title>
+  <title>Fluffy Wingz – Beach Edition (3D Enhanced)</title>
   <link rel="manifest" href="manifest.json">
-  <!-- PWA and theming -->
   <meta name="theme-color" content="#000000">
   <style>
-    /* Simple layout for the game canvas and UI overlays. */
-    html,body{margin:0;padding:0;width:100%;height:100%;background:#000;font-family:sans-serif;overflow:hidden;color:#fff}
-    #c{display:block;width:100%;height:100%;background:#000}
-    #menu,#over,#hud{position:absolute;top:0;left:0;width:100%;pointer-events:none;text-align:center;color:#fff}
-    #menu{top:30%;}
-    #menu button,#over button{pointer-events:auto;padding:12px 24px;font-size:18px;border:none;border-radius:6px;background:#cc8833;color:#fff;cursor:pointer}
-    #menu button:hover,#over button:hover{background:#bb7711}
-    #hud{padding:8px;font-size:18px;display:flex;justify-content:center;align-items:center;gap:12px}
-    #hud.hidden,#menu.hidden,#over.hidden{display:none}
-    #muteBtn{pointer-events:auto;padding:4px 8px;font-size:20px;border:none;background:none;color:#fff;cursor:pointer}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+      color: #fff;
+    }
+    #canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    #hud {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      z-index: 100;
+      pointer-events: none;
+    }
+    #score, #best, #combo {
+      display: inline-block;
+      margin-right: 30px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 2px solid #FFD700;
+    }
+    #angerMeter {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 300px;
+      height: 30px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid #FF6B6B;
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 100;
+    }
+    #angerBar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #FF6B6B, #FFD700);
+      transition: width 0.1s;
+    }
+    #powerUps {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+    .powerUpIcon {
+      width: 50px;
+      height: 50px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid #00FF00;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .powerUpIcon:hover {
+      background: rgba(0, 255, 0, 0.2);
+      transform: scale(1.1);
+    }
+    .powerUpIcon.active {
+      background: rgba(0, 255, 0, 0.4);
+      box-shadow: 0 0 15px #00FF00;
+    }
+    #menu, #gameOver {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+      text-align: center;
+    }
+    #menu.hidden, #gameOver.hidden {
+      display: none;
+    }
+    #menu h1, #gameOver h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+      color: #FFD700;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    }
+    #menu p, #gameOver p {
+      font-size: 18px;
+      margin-bottom: 30px;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+    button {
+      padding: 15px 40px;
+      font-size: 20px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #FF6B6B, #FFD700);
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin: 10px;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    }
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    }
+    button:active {
+      transform: translateY(-1px);
+    }
+    #muteBtn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid #FFD700;
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      font-size: 24px;
+      z-index: 100;
+      pointer-events: auto;
+    }
+    .achievement {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #FFD700;
+      padding: 15px 20px;
+      border-radius: 8px;
+      animation: slideIn 0.5s ease-out;
+      z-index: 150;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
   </style>
 </head>
 <body>
-  <canvas id="c"></canvas>
-  <div id="hud" class="hidden">
-    <span id="s">0</span>
-    &nbsp;|&nbsp;
-    Best: <span id="b">0</span>
-    <button id="muteBtn" title="Toggle sound">🔊</button>
+  <canvas id="canvas"></canvas>
+  
+  <div id="hud">
+    <span id="score">Score: 0</span>
+    <span id="combo">Combo: 0x</span>
+    <span id="best">Best: 0</span>
   </div>
+  
+  <div id="angerMeter">
+    <div id="angerBar"></div>
+  </div>
+  
+  <div id="powerUps">
+    <div class="powerUpIcon" id="shieldPU" title="Shield (S)">🛡️</div>
+    <div class="powerUpIcon" id="speedPU" title="Speed Boost (D)">⚡</div>
+    <div class="powerUpIcon" id="doublePU" title="Double Points (X)">2️⃣</div>
+  </div>
+  
+  <button id="muteBtn" title="Toggle sound">🔊</button>
+  
   <div id="menu">
-    <h1>Fluffy Wingz – Beach Edition</h1>
+    <h1>🐦 Fluffy Wingz – Beach Edition 🏖️</h1>
     <p>Tap or click to flap your wings. Collect rings and eggs to score points and evolve your bird!</p>
-    <button id="startBtn">Play</button>
+    <p style="font-size: 14px; color: #FFD700;">Now with 3D Graphics, Power-Ups, and Angry Birds Features!</p>
+    <button id="startBtn">▶️ PLAY</button>
   </div>
-  <div id="over" class="hidden">
-    <h2>Game Over</h2>
-    <p id="final"></p>
-    <button id="againBtn">Play Again</button>
+  
+  <div id="gameOver" class="hidden">
+    <h1>Game Over!</h1>
+    <p id="finalScore">Score: 0</p>
+    <p id="finalStats">Stats will appear here</p>
+    <button id="againBtn">🔄 PLAY AGAIN</button>
   </div>
-  <script src="script.js"></script>
+
+  <!-- Three.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- Game Script -->
+  <script src="improved_script.js"></script>
 </body>
 </html>
+
