@@ -658,6 +658,7 @@ function animate() {
 // GAME CONTROL        //
 /////////////////////////
 function startGame() {
+  if (gameState.isGameRunning) return;
   document.getElementById('menu').classList.add('hidden');
   document.getElementById('gameOver').classList.add('hidden');
   document.getElementById('hud').style.display = 'block';
@@ -692,7 +693,6 @@ function startGame() {
   particleGroup.clear();
 
   bird = create3DBird();
-  animate();
 }
 
 function gameOver() {
@@ -751,10 +751,9 @@ document.getElementById('againBtn').addEventListener('click', startGame);
 try {
   initThreeJS();
   bird = create3DBird();
-  animate();
+  animate(); // Start the main rendering loop once
   document.getElementById('best').textContent = `Best: ${gameState.best}`;
 } catch (error) {
   console.error('Game initialization error:', error);
   alert('Error initializing game. Please refresh the page.');
 }
-
