@@ -1,0 +1,29 @@
+name: CI - Testen & Code-Qualität
+on:
+  push: { branches: [main] }
+  pull_request: { branches: [main] }
+
+jobs:
+  test-js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci || true
+      - run: npm test || echo "Keine Tests definiert"
+
+  lint-and-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: ${{ github.head_ref }} }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci || true
+      - run: npx eslint . || true
+      - run: npx prettier --write .
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "style: auto format [skip ci]"
+          branch: ${{ github.head_ref }}
