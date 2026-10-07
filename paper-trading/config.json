@@ -9,5 +9,12 @@
   "maxSpreadPct": 0.20,
   "minDepthMultiple": 3,
   "minVolumeRatio": 1.10,
+  "minVolatilityPct": 0.005,
+  "targetVolatilityPct": 0.04,
+  "maxVolatilityPct": 0.35,
+  "minSignalScore": 60,
+  "stopLossAtrMultiple": 1.5,
+  "takeProfitAtrMultiple": 2.5,
+  "maxOpenPositions": 2,
   "symbols": ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "AVAX/USDT", "LINK/USDT", "SUI/USDT"]
 }
