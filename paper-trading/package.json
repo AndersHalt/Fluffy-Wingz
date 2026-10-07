@@ -1,0 +1,11 @@
+{
+  "name": "fluffy-wingz-paper-trader",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "start": "node src/cli.js",
+    "backtest": "node src/backtest.js"
+  }
+}
