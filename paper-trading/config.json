@@ -7,5 +7,7 @@
   "estimatedSlippageRate": 0.0005,
   "maxPositionFraction": 0.25,
   "maxSpreadPct": 0.20,
+  "minDepthMultiple": 3,
+  "minVolumeRatio": 1.10,
   "symbols": ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "AVAX/USDT", "LINK/USDT", "SUI/USDT"]
 }
