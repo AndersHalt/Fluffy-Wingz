@@ -7,21 +7,21 @@ export class PaperExecution {
     this.mode = PAPER_ONLY;
   }
 
-  buy({ symbol, quantity, ask, entryFeeEur, stopLoss, takeProfit, timestamp }) {
+  buy({ symbol, quantity, ask, entryFeeEur, expectedProfitEur = 0, stopLoss, takeProfit, timestamp }) {
     if (this.mode !== PAPER_ONLY) throw new Error("Safety lock");
-    if (!(quantity > 0) || !(ask > 0)) throw new Error("Invalid simulated buy");
+    if (!(quantity > 0) || !(ask > 0) || entryFeeEur < 0) throw new Error("Invalid simulated buy");
     const costEur = quantity * ask;
     this.portfolio.open({
       symbol, quantity, entryPrice: ask, currentPrice: ask, costEur,
-      entryFeeEur, expectedProfitEur: 0, unrealizedPnlEur: 0,
+      entryFeeEur, expectedProfitEur, unrealizedPnlEur: 0,
       stopLoss, takeProfit, openedAt: timestamp, closedAt: null
     });
-    return { type: "PAPER_BUY", symbol, quantity, price: ask, costEur };
+    return { type: "PAPER_BUY", symbol, quantity, price: ask, costEur, entryFeeEur, timestamp };
   }
 
   sell({ symbol, bid, exitFeeEur, timestamp }) {
     if (this.mode !== PAPER_ONLY) throw new Error("Safety lock");
-    const result = this.portfolio.close(symbol, bid, exitFeeEur);
-    return { type: "PAPER_SELL", symbol, price: bid, pnlEur: result.pnl, timestamp };
+    const result = this.portfolio.close(symbol, bid, exitFeeEur, timestamp);
+    return { type: "PAPER_SELL", symbol, price: bid, exitFeeEur, pnlEur: result.pnl, timestamp };
   }
 }
